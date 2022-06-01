@@ -1,19 +1,17 @@
 import { v4 as uuidV4 } from 'uuid';
 
+const list = document.querySelector<HTMLUListElement>('#list');
+const input = document.getElementById(
+  'new-task-title',
+) as HTMLInputElement | null;
+const form = document.querySelector<HTMLFormElement>('#new-task-form');
+
 type Task = {
   id: string;
   title: string;
   completed: boolean;
   createdAt: Date;
 };
-
-console.log(uuidV4());
-
-const list = document.querySelector<HTMLUListElement>('#list');
-const input = document.getElementById(
-  'new-task-title',
-) as HTMLInputElement | null;
-const form = document.querySelector<HTMLFormElement>('#new-task-form');
 
 const tasks: Task[] = loadTask();
 tasks.forEach(addListItem);
@@ -28,9 +26,9 @@ form?.addEventListener('submit', (e) => {
     completed: false,
     createdAt: new Date(),
   };
-  tasks.push(task);
 
   addListItem(task);
+  tasks.push(task);
   saveTask();
   input.value = '';
 });
@@ -39,11 +37,12 @@ function addListItem(task: Task) {
   const item = document.createElement('li');
   const label = document.createElement('label');
   const checkbox = document.createElement('input');
+  checkbox.type = 'checkbox';
   checkbox.addEventListener('change', (e) => {
     task.completed = checkbox.checked;
     saveTask();
   });
-  checkbox.type = 'checkbox';
+  checkbox.checked = task.completed;
   label.append(checkbox, task.title);
   item.append(label);
   list?.append(item);
